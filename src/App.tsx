@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from './store';
 import LoginForm from './components/auth/LoginForm';
 import Navbar from './components/layout/Navbar';
+import Dashboard from './components/dashboard/Dashboard';
 
 const App = () => {
   const { isDark } = useSelector((state: RootState) => state.theme);
@@ -21,12 +22,17 @@ const App = () => {
             }
           />
           <Route
+            path="/dashboard"
+            element={
+              isAuthenticated ? <Dashboard /> : <Navigate to="/login" />
+            }
+          />
+          <Route
             path="/"
             element={
               isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/login" />
             }
           />
-          {/* Add more routes here */}
         </Routes>
       </Router>
     </div>
