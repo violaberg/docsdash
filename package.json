@@ -1,0 +1,13 @@
+{
+  "name": "docsdash",
+  "private": true,
+  "scripts": {
+    "test": "python manage.py test",
+    "start": "python manage.py runserver",
+    "build": "python manage.py collectstatic --noinput",
+    "migrate": "python manage.py migrate"
+  },
+  "dependencies": {
+    "tailwindcss": "^4.0.0-alpha.1"
+  }
+}

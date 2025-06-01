@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | DocsDash{% endblock %}
+
+{% block header %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 fade-in">
+  <!-- Stats cards -->
+  <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+    <div class="px-4 py-5 sm:p-6">
+      <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+        Total Patients
+      </dt>
+      <dd class="mt-1 text-3xl font-semibold text-primary-600 dark:text-primary-400">
+        {{ total_patients }}
+      </dd>
+    </div>
+  </div>
+  
+  <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+    <div class="px-4 py-5 sm:p-6">
+      <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+        Active Patients
+      </dt>
+      <dd class="mt-1 text-3xl font-semibold text-primary-600 dark:text-primary-400">
+        {{ active_patients }}
+      </dd>
+    </div>
+  </div>
+  
+  <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+    <div class="px-4 py-5 sm:p-6">
+      <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+        Today's Appointments
+      </dt>
+      <dd class="mt-1 text-3xl font-semibold text-primary-600 dark:text-primary-400">
+        {{ appointments_today }}
+      </dd>
+    </div>
+  </div>
+  
+  <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+    <div class="px-4 py-5 sm:p-6">
+      <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+        Upcoming (7 Days)
+      </dt>
+      <dd class="mt-1 text-3xl font-semibold text-primary-600 dark:text-primary-400">
+        {{ upcoming_appointments }}
+      </dd>
+    </div>
+  </div>
+</div>
+
+<div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
+  <!-- Today's appointments -->
+  <div class="lg:col-span-2">
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+      <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+          Today's Appointments
+        </h3>
+        <a href="{% url 'appointment_list' %}" class="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-500">
+          View all
+        </a>
+      </div>
+      <div class="border-t border-gray-200 dark:border-gray-700">
+        {% if todays_appointments %}
+          <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+            {% for appointment in todays_appointments %}
+              <li class="px-4 py-4 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-150">
+                <a href="{% url 'appointment_detail' appointment.id %}" class="flex justify-between">
+                  <div>
+                    <div class="flex items-center">
+                      <span class="status-indicator status-{{ appointment.status }}"></span>
+                      <p class="text-sm font-medium text-primary-600 dark:text-primary-400">
+                        {{ appointment.patient.full_name }}
+                      </p>
+                    </div>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                      {{ appointment.appointment_type.name }}
+                    </p>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-sm font-medium text-gray-900 dark:text-gray-300">
+                      {{ appointment.start_time|time:"g:i A" }}
+                    </p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                      {{ appointment.get_status_display }}
+                    </p>
+                  </div>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <div class="px-4 py-12 text-center">
+            <p class="text-sm text-gray-500 dark:text-gray-400">No appointments scheduled for today.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    
+    <!-- Tomorrow's appointments -->
+    <div class="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+      <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+          Tomorrow's Appointments
+        </h3>
+        <a href="{% url 'appointment_list' %}" class="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-500">
+          View all
+        </a>
+      </div>
+      <div class="border-t border-gray-200 dark:border-gray-700">
+        {% if tomorrows_appointments %}
+          <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+            {% for appointment in tomorrows_appointments %}
+              <li class="px-4 py-4 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-150">
+                <a href="{% url 'appointment_detail' appointment.id %}" class="flex justify-between">
+                  <div>
+                    <div class="flex items-center">
+                      <span class="status-indicator status-{{ appointment.status }}"></span>
+                      <p class="text-sm font-medium text-primary-600 dark:text-primary-400">
+                        {{ appointment.patient.full_name }}
+                      </p>
+                    </div>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                      {{ appointment.appointment_type.name }}
+                    </p>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-sm font-medium text-gray-900 dark:text-gray-300">
+                      {{ appointment.start_time|time:"g:i A" }}
+                    </p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                      {{ appointment.get_status_display }}
+                    </p>
+                  </div>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <div class="px-4 py-12 text-center">
+            <p class="text-sm text-gray-500 dark:text-gray-400">No appointments scheduled for tomorrow.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  
+  <div>
+    <!-- Recent patients -->
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+          Recently Viewed Patients
+        </h3>
+      </div>
+      <div class="border-t border-gray-200 dark:border-gray-700">
+        {% if recent_patients %}
+          <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+            {% for recent in recent_patients %}
+              <li class="px-4 py-4 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-150">
+                <a href="{% url 'patient_detail' recent.patient.id %}" class="block">
+                  <div class="flex items-center">
+                    {% if recent.patient.photo %}
+                      <img src="{{ recent.patient.photo.url }}" alt="{{ recent.patient.full_name }}" class="h-10 w-10 rounded-full object-cover">
+                    {% else %}
+                      <div class="h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-800 flex items-center justify-center">
+                        <span class="text-primary-600 dark:text-primary-300 font-medium">
+                          {{ recent.patient.first_name|first }}{{ recent.patient.last_name|first }}
+                        </span>
+                      </div>
+                    {% endif %}
+                    <div class="ml-3">
+                      <p class="text-sm font-medium text-gray-900 dark:text-white">
+                        {{ recent.patient.full_name }}
+                      </p>
+                      <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                        <span class="mr-2">DOB: {{ recent.patient.date_of_birth|date:"M d, Y" }}</span>
+                        <span class="mr-2">•</span>
+                        <span>{{ recent.patient.age }} y/o</span>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <div class="px-4 py-12 text-center">
+            <p class="text-sm text-gray-500 dark:text-gray-400">No recently viewed patients.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    
+    <!-- Quick actions -->
+    <div class="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+      <div class="px-4 py-5 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+          Quick Actions
+        </h3>
+      </div>
+      <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-4 sm:px-6">
+        <div class="grid grid-cols-2 gap-4">
+          <a href="{% url 'patient_create' %}" class="btn btn-primary flex items-center justify-center text-center py-3 rounded-md">
+            <i class="fas fa-user-plus mr-2"></i> New Patient
+          </a>
+          <a href="{% url 'appointment_create' %}" class="btn btn-secondary flex items-center justify-center text-center py-3 rounded-md">
+            <i class="fas fa-calendar-plus mr-2"></i> New Appointment
+          </a>
+          <a href="{% url 'medical_references' %}" class="btn btn-accent flex items-center justify-center text-center py-3 rounded-md">
+            <i class="fas fa-book-medical mr-2"></i> Medical References
+          </a>
+          <a href="{% url 'calendar' %}" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 flex items-center justify-center text-center py-3 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition duration-150">
+            <i class="fas fa-calendar-alt mr-2"></i> Calendar
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Alerts -->
+    {% if alerts %}
+      <div class="mt-6 bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+        <div class="px-4 py-5 sm:px-6 bg-red-50 dark:bg-red-900">
+          <h3 class="text-lg leading-6 font-medium text-red-800 dark:text-red-100">
+            <i class="fas fa-exclamation-triangle mr-2"></i> Alerts
+          </h3>
+        </div>
+        <div class="border-t border-gray-200 dark:border-gray-700">
+          <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+            {% for alert in alerts %}
+              <li class="px-4 py-4 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-150">
+                <a href="{{ alert.url }}" class="block">
+                  <p class="text-sm font-medium text-gray-900 dark:text-white">
+                    {{ alert.title }}
+                  </p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                    {{ alert.message }}
+                  </p>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
