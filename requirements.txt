@@ -2,7 +2,6 @@ Django==5.0.1
 djangorestframework==3.14.0
 django-pwa==1.1.0
 django-tailwind==3.6.0
-pillow==10.1.0
 python-dotenv==1.0.0
 django-otp==1.2.4
 django-two-factor-auth==1.15.0
@@ -10,3 +9,7 @@ whitenoise==6.5.0
 django-compressor==4.4
 django-simple-history==3.4.0
 bcrypt==4.0.1
+pillow==11.2.1
+psycopg2-binary==2.9.10
+setuptools==80.9.0
+wheel==0.45.1
