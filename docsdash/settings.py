@@ -4,15 +4,21 @@ Django settings for docsdash project.
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+from urllib.parse import urlparse
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-h_x7#lo2=5*z8&-_1nf_!zn^q(1cx@!8n6-a)8)l^0w@q*=!4j'
+SECRET_KEY = os.getenv('SECRET_KEY', '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+SITE_ID = 1
 
 ALLOWED_HOSTS = ['*']
 
@@ -31,10 +37,10 @@ INSTALLED_APPS = [
     'simple_history',
     'tailwind',
     'theme',
-    'dashboard',
-    'patients',
-    'appointments',
-    'authentication',
+    'dashboard.apps.DashboardConfig',
+    'patients.apps.PatientsConfig',
+    'appointments.apps.AppointmentsConfig',
+    'authentication.apps.AuthenticationConfig',
 ]
 
 # Tailwind app
@@ -73,10 +79,23 @@ TEMPLATES = [
 WSGI_APPLICATION = 'docsdash.wsgi.application'
 
 # Database
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+#}
+
+tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': tmpPostgres.path.replace('/', ''),
+        'USER': tmpPostgres.username,
+        'PASSWORD': tmpPostgres.password,
+        'HOST': tmpPostgres.hostname,
+        'PORT': 5432,
     }
 }
 
